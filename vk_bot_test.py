@@ -32,10 +32,11 @@ def main():
     for event in VkLongPoll(session).listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
             users_id = db.select("SELECT id FROM users")
-            if len(users_id) > 1:
+            print(users_id)
+            if len(users_id) > 0:
                 id_list = [i["id"] for i in users_id]
             else:
-                id_list = [users_id["id"]]
+                id_list = []
 
             user_id = event.user_id
             user_info = session.method('users.get', {"user_ids": user_id, "fields": "city"})[0]
