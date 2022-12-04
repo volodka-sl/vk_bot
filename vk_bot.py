@@ -8,7 +8,7 @@ import datetime
 today = str(datetime.date.today()).split()[0]
 tomorrow = datetime.date.today() + datetime.timedelta(days=1)
 
-token = 'vk1.a.QXP_OrTEVN8DDcRLlMJh99Y4xEOFf1aJe8MyoKD-iQ1HGfAG3NXz7y0MdtilT-ke4gYpSVapjLbjYOgZF6ZTwZbUVHs6vvokM2XEk2Bik9FtMGrcsZzWklWFYZmrv9vhnHg416fulnUbYOvlh1h59pAO1QE2CUMcIw2kLnfl_cS4UaLfoypl4Cr4S7twUnfbot-FHWtyX9Uf_JFIOoZsXg'
+token = "vk1.a.8XlnsTJqve641NO..........gJbN6DIOoqJ5ffWXVF_z16TIeIUg"
 
 session = vk_api.VkApi(token=token)
 db = Database()
@@ -32,9 +32,10 @@ def main():
     for event in VkLongPoll(session).listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
             users_id = db.select("SELECT id FROM users")
-            print(users_id)
-            if len(users_id) > 0:
+            if len(users_id) > 1:
                 id_list = [i["id"] for i in users_id]
+            elif len(users_id) == 1:
+                id_list = [users_id["id"]]
             else:
                 id_list = []
 
@@ -76,7 +77,6 @@ def main():
                     user_reg_condition = user_data in users_db
                 if user_reg_condition:
                     user_city = db.select(f"SELECT city FROM users WHERE id='{user_id}'")['city']
-                    print(user_city)
                     write_msg(user_id, "Привет!\n\nА я тебя помню! вот, что я умею :)", main_keyboard)
                 else:
                     if user_city:
@@ -151,7 +151,6 @@ def main():
                     write_msg(user_id, "Похоже, в твоём городе нет афиш(", main_keyboard)
 
             elif msg == 'пробка':
-                print(user_city)
                 traffic_jam_score = db.select(f"SELECT * FROM traffic_jam WHERE city = '{user_city}'")
                 if traffic_jam_score:
                     write_msg(user_id,
